@@ -116,8 +116,8 @@ async function followRedirects(jar, response, rewrites, method = 'GET', body = n
  * Obtain a Backstage bearer token via the OIDC/Keycloak auth flow.
  *
  * @param {object} options
- * @param {string} options.username - Keycloak username
- * @param {string} options.password - Keycloak password
+ * @param {string} options.username - Keycloak username (required)
+ * @param {string} options.password - Keycloak password (required)
  * @param {string} [options.provider='oidc'] - Auth provider name ('oidc' or 'keycloak')
  * @param {string} [options.baseUrl='http://localhost:7007'] - Backstage backend URL
  * @param {string} [options.frontendUrl='http://localhost:3000'] - Frontend origin for popup flow
