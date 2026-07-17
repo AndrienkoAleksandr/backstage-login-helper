@@ -39,7 +39,7 @@ jobs:
 
       - name: Apply changesets (version bump + changelog)
         if: steps.check.outputs.has_changesets == 'true'
-        run: yarn version
+        run: npx changeset version
 
       - name: Update lockfile after version bump
         if: steps.check.outputs.has_changesets == 'true'
@@ -56,7 +56,7 @@ jobs:
 
       - name: Publish to npm
         if: steps.check.outputs.has_changesets == 'true'
-        run: yarn release
+        run: npx changeset publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
