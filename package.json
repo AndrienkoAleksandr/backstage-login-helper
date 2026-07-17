@@ -1,0 +1,44 @@
+{
+  "name": "@oandriie/backstage-login-helper",
+  "version": "0.1.0",
+  "description": "Headless Backstage OIDC/Keycloak login helper — obtain bearer tokens without a frontend (Node.js built-ins only)",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "src/index.mjs",
+  "bin": {
+    "backstage-login": "src/cli.mjs"
+  },
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AndrienkoAleksandr/backstage-login-helper"
+  },
+  "keywords": [
+    "backstage",
+    "keycloak",
+    "oidc",
+    "login",
+    "headless",
+    "bearer-token"
+  ],
+  "author": "Oleksandr Andriienko"
+}
