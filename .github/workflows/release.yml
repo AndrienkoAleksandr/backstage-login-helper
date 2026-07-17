@@ -14,8 +14,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -24,26 +25,43 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: yarn install
+
+      - name: Check for changesets
+        id: check
+        run: |
+          if ls .changeset/*.md 1>/dev/null 2>&1 && [ "$(ls .changeset/*.md | grep -v README.md)" ]; then
+            echo "has_changesets=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changesets=false" >> "$GITHUB_OUTPUT"
+            echo "No pending changesets found — skipping release."
+          fi
 
       - name: Apply changesets (version bump + changelog)
+        if: steps.check.outputs.has_changesets == 'true'
         run: yarn version
 
-      - name: Commit version bump
+      - name: Update lockfile after version bump
+        if: steps.check.outputs.has_changesets == 'true'
+        run: yarn install
+
+      - name: Commit and push version bump
+        if: steps.check.outputs.has_changesets == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "Version Packages" --allow-empty
-          git pull --rebase origin main
-          git push
+          git commit -m "Version Packages"
+          git push origin main
 
       - name: Publish to npm
+        if: steps.check.outputs.has_changesets == 'true'
         run: yarn release
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create git tag
+        if: steps.check.outputs.has_changesets == 'true'
         run: |
           VERSION=$(node -p "require('./package.json').version")
           git tag "v${VERSION}"
